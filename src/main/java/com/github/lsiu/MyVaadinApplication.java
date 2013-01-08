@@ -7,14 +7,19 @@ import org.tepi.filtertable.FilterTable;
 import com.github.lsiu.init.InitDb;
 import com.vaadin.Application;
 import com.vaadin.data.Container;
+import com.vaadin.data.Property.ValueChangeEvent;
+import com.vaadin.data.Property.ValueChangeListener;
 import com.vaadin.data.util.sqlcontainer.SQLContainer;
 import com.vaadin.data.util.sqlcontainer.connection.JDBCConnectionPool;
 import com.vaadin.data.util.sqlcontainer.connection.SimpleJDBCConnectionPool;
 import com.vaadin.data.util.sqlcontainer.query.QueryDelegate;
 import com.vaadin.data.util.sqlcontainer.query.TableQuery;
+import com.vaadin.ui.Alignment;
+import com.vaadin.ui.CheckBox;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.DefaultFieldFactory;
 import com.vaadin.ui.Field;
+import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.TableFieldFactory;
 import com.vaadin.ui.TextField;
 import com.vaadin.ui.VerticalLayout;
@@ -38,6 +43,8 @@ public class MyVaadinApplication extends Application {
 	}
 	
 	private Window window;
+	
+	private FilterTable table;
 
 	@Override
 	public void init() {
@@ -46,11 +53,31 @@ public class MyVaadinApplication extends Application {
 		VerticalLayout layout = new VerticalLayout();
 		layout.setSizeFull();
 
-		FilterTable table = new FilterTable();
+		table = new FilterTable();
 		initTable(table);
+		
+		HorizontalLayout topBar = new HorizontalLayout();
+		initTopBar(topBar);
+		layout.addComponent(topBar);
 
 		layout.addComponent(table);
+		layout.setExpandRatio(table, 1);
 		window.setContent(layout);
+	}
+	
+	private void initTopBar(HorizontalLayout topBar) {
+		topBar.setWidth("100%");
+		final CheckBox editableCheckBox = new CheckBox("Editable");
+		topBar.addComponent(editableCheckBox);
+		topBar.setComponentAlignment(editableCheckBox, Alignment.BOTTOM_RIGHT);
+		editableCheckBox.setValue(table.isEditable());
+		editableCheckBox.setImmediate(true);
+		editableCheckBox.addListener(new ValueChangeListener() {
+			@Override
+			public void valueChange(ValueChangeEvent event) {
+				table.setEditable((Boolean)editableCheckBox.getValue());
+			}
+		});
 	}
 
 	private void initTable(FilterTable table) {
@@ -67,7 +94,6 @@ public class MyVaadinApplication extends Application {
 		}
 		
 		table.setFilterBarVisible(true);
-		table.setEditable(true);
 		table.setImmediate(true);
 
 		table.setTableFieldFactory(new TableFieldFactory() {
