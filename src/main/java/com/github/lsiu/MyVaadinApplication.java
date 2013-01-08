@@ -58,6 +58,8 @@ public class MyVaadinApplication extends Application {
 			throw new RuntimeException(
 					"Error initializing container with query delegate", e);
 		}
+		
+		table.setFilterBarVisible(true);
 	}
 
 }
