@@ -17,6 +17,11 @@
 			<param-name>application</param-name>
 			<param-value>com.github.lsiu.MyVaadinApplication</param-value>
 		</init-param>
+		<init-param>
+			<description>Widget Set to Use</description>
+			<param-name>widgetset</param-name>
+			<param-value>com.github.lsiu.gwt.MyWidgetSet</param-value>
+		</init-param>
 	</servlet>
 	<servlet-mapping>
 		<servlet-name>Vaadin Application Servlet</servlet-name>
